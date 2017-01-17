@@ -6,10 +6,12 @@ const Search = React.createClass({
     let recording = false;
     let track = null;
     let recordedChunks = [];
+    let blob = null;
     return{
       recording: recording,
       track: track,
-      recordedChunks: recordedChunks
+      recordedChunks: recordedChunks,
+      blob: blob
     };
   },
 
@@ -18,37 +20,36 @@ const Search = React.createClass({
     navigator.mozGetUserMedia || navigator.msGetUserMedia);
   },
 
-  errorCallback (e) {
-    console.log('Reeeejected!', e);
-  },
-
   handleRecording (stream) {
     const recordedChunks = this.state.recordedChunks;
     const mediaRecorder = new MediaRecorder(stream, {mimeType: 'audio/webm'})
-    const _this = this;
 
     mediaRecorder.start();
 
-    mediaRecorder.ondataavailable = function(e) {
+    mediaRecorder.ondataavailable = (e) => {
       if (e.data.size > 0){
         recordedChunks.push(e.data);
-        _this.setState({recordedChunks:recordedChunks});
+        this.setState({recordedChunks:recordedChunks});
       }
     }
 
-    mediaRecorder.onstop = function(e) {
-      if (recordedChunks){
+    mediaRecorder.onstop = (e) => {
         if(recordedChunks.length > 0) {
-          var audio = document.querySelector('audio');
-          audio.controls = true;
-          var blob = new Blob(recordedChunks, { 'type' : 'audio/ogg; codecs=opus' });
-          var audioURL = window.URL.createObjectURL(blob);
-          audio.src = audioURL;
+          const blob = new Blob(recordedChunks);
+          this.blobToBase64(blob);
         }
-      }
     }
 
     this.setState({mediaRecorder:mediaRecorder});
+  },
+
+  blobToBase64 (blob) {
+    var reader = new window.FileReader();
+     reader.readAsDataURL(blob);
+     reader.onloadend = () => {
+      const base64 = reader.result.split('data:;base64,')[1]
+        this.findSongs(base64);
+      }
   },
 
   startRecording () {
@@ -67,15 +68,26 @@ const Search = React.createClass({
     this.setState({recording:recording, mediaRecorder:mediaRecorder});
   },
 
-  findSongs () {
-    // fetch('http://localhost:3000/recognise').then((response) => {
-    //   console.log(response)
-    //   return response.json()
-    // }).then((dataAsJson) => {
-    //   console.log(dataAsJson)
-    // }).catch(function(error) {
-    //   console.log('There has been a problem with your fetch operation: ' + error.message);
-    // });
+  findSongs (base64) {
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+
+    var myInit = {
+      method: 'POST',
+      headers: myHeaders,
+      body: JSON.stringify({"base64":base64})
+    };
+
+    fetch("http://localhost:3000/recognise", myInit)
+      .then((response) => {
+      console.log(response)
+      return response.json()
+    }).then((dataAsJson) => {
+      console.log(dataAsJson)
+    }).catch(function(error) {
+      console.log('There has been a problem with your fetch operation: ' + error.message);
+    });
   },
 
   handleClick() {
