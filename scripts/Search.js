@@ -4,20 +4,11 @@ const Search = React.createClass({
 
   getInitialState(){
     let recording = false;
-    let track = null;
     let recordedChunks = [];
-    let blob = null;
     return{
       recording: recording,
-      track: track,
-      recordedChunks: recordedChunks,
-      blob: blob
+      recordedChunks: recordedChunks
     };
-  },
-
-  hasGetUserMedia () {
-    return !!(navigator.getUserMedia || navigator.webkitGetUserMedia ||
-    navigator.mozGetUserMedia || navigator.msGetUserMedia);
   },
 
   handleRecording (stream) {
@@ -34,22 +25,22 @@ const Search = React.createClass({
     }
 
     mediaRecorder.onstop = (e) => {
-        if(recordedChunks.length > 0) {
-          const blob = new Blob(recordedChunks);
-          this.blobToBase64(blob);
-        }
+      if(recordedChunks.length > 0) {
+        const blob = new Blob(recordedChunks);
+        this.blobToBase64(blob);
+      }
     }
 
     this.setState({mediaRecorder:mediaRecorder});
   },
 
   blobToBase64 (blob) {
-    var reader = new window.FileReader();
-     reader.readAsDataURL(blob);
-     reader.onloadend = () => {
-      const base64 = reader.result.split('data:;base64,')[1]
-        this.findSongs(base64);
-      }
+    const reader = new window.FileReader();
+    reader.readAsDataURL(blob);
+    reader.onloadend = () => {
+    const base64 = reader.result.split('data:;base64,')[1]
+      this.findSongs(base64);
+    }
   },
 
   startRecording () {
@@ -72,7 +63,6 @@ const Search = React.createClass({
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
-
     var myInit = {
       method: 'POST',
       headers: myHeaders,
@@ -81,12 +71,11 @@ const Search = React.createClass({
 
     fetch("http://localhost:3000/recognise", myInit)
       .then((response) => {
-      console.log(response)
       return response.json()
     }).then((dataAsJson) => {
       console.log(dataAsJson)
     }).catch(function(error) {
-      console.log('There has been a problem with your fetch operation: ' + error.message);
+      console.log(error.message);
     });
   },
 
@@ -108,9 +97,13 @@ const Search = React.createClass({
 
 module.exports = Search;
 
-
 // navigator.getUserMedia =
 //   navigator.getUserMedia ||
 //   navigator.webkitGetUserMedia ||
 //   navigator.mozGetUserMedia ||
 //   navigator.msGetUserMedia;
+
+// hasGetUserMedia () {
+//   return !!(navigator.getUserMedia || navigator.webkitGetUserMedia ||
+//   navigator.mozGetUserMedia || navigator.msGetUserMedia);
+// },
