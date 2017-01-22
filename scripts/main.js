@@ -1,5 +1,5 @@
 const React = require('react');
 const ReactDom = require('react-dom');
-const Search = require('./Search');
+const SongFinder = require('./SongFinder');
 
-ReactDom.render(<Search />, document.querySelector('.container'));
+ReactDom.render(<SongFinder />, document.querySelector('.container'));

@@ -1,12 +1,10 @@
 const React = require('react');
 
-const Search = React.createClass({
+const Recorder = React.createClass({
 
   getInitialState(){
-    let recording = false;
     let recordedChunks = [];
     return{
-      recording: recording,
       recordedChunks: recordedChunks
     };
   },
@@ -44,19 +42,19 @@ const Search = React.createClass({
   },
 
   startRecording () {
-    const recording = true;
-    this.setState({recording:recording});
+    this.props.setRecording(true);
 
     navigator.mediaDevices.getUserMedia({ audio: true, video: false })
         .then(this.handleRecording);
   },
 
   stopRecording () {
-    const recording = false;
+    this.props.setRecording(false);
+
     const mediaRecorder = this.state.mediaRecorder;
 
     mediaRecorder.stop();
-    this.setState({recording:recording, mediaRecorder:mediaRecorder});
+    this.setState({mediaRecorder:mediaRecorder});
   },
 
   findSongs (base64) {
@@ -80,7 +78,7 @@ const Search = React.createClass({
   },
 
   handleClick() {
-    this.state.recording ? this.stopRecording() : this.startRecording();
+    this.props.recording ? this.stopRecording() : this.startRecording();
   },
 
   render(){
@@ -95,7 +93,7 @@ const Search = React.createClass({
   }
 });
 
-module.exports = Search;
+module.exports = Recorder;
 
 // navigator.getUserMedia =
 //   navigator.getUserMedia ||
