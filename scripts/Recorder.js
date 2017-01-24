@@ -37,7 +37,7 @@ const Recorder = React.createClass({
     reader.readAsDataURL(blob);
     reader.onloadend = () => {
     const base64 = reader.result.split('data:;base64,')[1]
-      this.findSongs(base64);
+      this.transcribeRecording(base64);
     }
   },
 
@@ -57,7 +57,7 @@ const Recorder = React.createClass({
     this.setState({mediaRecorder:mediaRecorder});
   },
 
-  findSongs (base64) {
+  transcribeRecording (base64) {
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
@@ -72,8 +72,9 @@ const Recorder = React.createClass({
       return response.json()
     }).then((dataAsJson) => {
       console.log(dataAsJson)
+      this.props.setTranscription(dataAsJson);
     }).catch(function(error) {
-      console.log(error.message);
+      console.log('hi', error.message);
     });
   },
 

@@ -10,9 +10,11 @@ const Confirm = React.createClass({
   },
 
   render(){
+    let transcription = this.props.transcription;
+
     return(
       <div>
-      Did you say X?
+      <span>Did you say {transcription}?</span>
       <button>Yes</button>
       <button>No</button>
       </div>
