@@ -1,13 +1,13 @@
 const React = require('react');
 
-const Song = React.createClass({
+const Loader = React.createClass({
   render(){
     return(
       <div>
-        Song
+        Loader
       </div>
     );
   }
 });
 
-module.exports = Song;
+module.exports = Loader;

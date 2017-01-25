@@ -58,6 +58,8 @@ const Recorder = React.createClass({
   },
 
   transcribeRecording (base64) {
+    this.props.setTranscribingSpeech(true);
+
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
@@ -73,6 +75,7 @@ const Recorder = React.createClass({
     }).then((dataAsJson) => {
       console.log(dataAsJson)
       this.props.setTranscription(dataAsJson);
+      this.props.setTranscribingSpeech(false);
     }).catch(function(error) {
       console.log('hi', error.message);
     });
@@ -85,10 +88,7 @@ const Recorder = React.createClass({
   render(){
     return(
       <div>
-        <div onClick={this.handleClick}>Sing to me</div>
-        <div>
-          <audio id="player" controls></audio>
-        </div>
+        <div onClick={this.handleClick}>Record</div>
       </div>
     );
   }

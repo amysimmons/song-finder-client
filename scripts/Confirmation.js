@@ -9,14 +9,23 @@ const Confirm = React.createClass({
     };
   },
 
+  handleClick(value){
+    debugger
+    if(value === "yes"){
+      this.props.setTranscriptionCorrect(true);
+    }else {
+      this.props.setTranscriptionCorrect(false);
+    }
+  },
+
   render(){
-    let transcription = this.props.transcription;
+    let transcription = this.props.transcription.transcription;
 
     return(
       <div>
-      <span>Did you say {transcription}?</span>
-      <button>Yes</button>
-      <button>No</button>
+      <span>Did you say{transcription}?</span>
+      <button onClick={() => this.handleClick("yes")}>Yes</button>
+      <button onClick={() => this.handleClick("no")}>No</button>
       </div>
     );
   }
