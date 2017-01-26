@@ -10,7 +10,6 @@ const Confirm = React.createClass({
   },
 
   handleClick(value){
-    debugger
     if(value === "yes"){
       this.props.setTranscriptionCorrect(true);
     }else {

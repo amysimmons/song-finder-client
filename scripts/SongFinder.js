@@ -60,48 +60,42 @@ const SongFinder = React.createClass({
     let findingSongs = this.state.findingSongs;
     let matches = this.state.matches;
 
+    if (transcribingSpeech || findingSongs) {
+      return (
+        <Loader
+          transcribingSpeech={transcribingSpeech}
+          findingSongs={findingSongs}/>
+      )
+    }
+
     if (transcription === null || transcriptionCorrect === false){
+      // this.getInitialState()
+      // reset the state here
+
      return(
-       <div>
-         <Recorder
-           recording={recording}
-           setRecording={this.setRecording}
-           setTranscribingSpeech={this.setTranscribingSpeech}
-           setTranscription={this.setTranscription}/>
-       </div>
+       <Recorder
+         recording={recording}
+         setRecording={this.setRecording}
+         setTranscribingSpeech={this.setTranscribingSpeech}
+         setTranscription={this.setTranscription}/>
      );
     }
 
     if (transcription !== null && transcriptionCorrect === null) {
       return (
-        <div>
-          <Confirmation
-            transcription={transcription}
-            transcriptionCorrect={transcriptionCorrect}
-            setTranscriptionCorrect={this.setTranscriptionCorrect}/>
-        </div>
+        <Confirmation
+          transcription={transcription}
+          transcriptionCorrect={transcriptionCorrect}
+          setTranscriptionCorrect={this.setTranscriptionCorrect}/>
       );
-    }
-
-    if (transcribingSpeech || findingSongs) {
-      return (
-        <div>
-          <Loader/>
-        </div>
-      )
     }
 
     if (matches.length > 0) {
       return (
-        <div>
-          <Song/>
-        </div>
+        <Song/>
       )
     }
 
-
-
-    // if ()
 
   /*
   if transcription is null show recorder
