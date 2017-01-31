@@ -39,6 +39,7 @@ const SongFinder = React.createClass({
   setTranscriptionCorrect (transcriptionCorrect) {
     if(transcriptionCorrect){
       this.setState({transcriptionCorrect:true});
+      this.findSongs();
     } else {
       this.setState({transcriptionCorrect:false});
     }
@@ -50,6 +51,26 @@ const SongFinder = React.createClass({
     } else {
       this.setState({transcribingSpeech:false});
     }
+  },
+
+  findSongs() {
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    var myInit = {
+      method: 'POST',
+      headers: myHeaders,
+      body: JSON.stringify({"transcription":"plant a seed plant a flower plant a rose"})
+    };
+
+    fetch("http://localhost:3000/findsongs", myInit)
+      .then((response) => {
+      return response.json()
+    }).then((dataAsJson) => {
+      console.log(dataAsJson)
+    }).catch(function(error) {
+      console.log('error', error.message);
+    });
   },
 
   render(){

@@ -77,7 +77,7 @@ const Recorder = React.createClass({
       this.props.setTranscription(dataAsJson);
       this.props.setTranscribingSpeech(false);
     }).catch(function(error) {
-      console.log('hi', error.message);
+      console.log('error', error.message);
     });
   },
 
