@@ -23,6 +23,8 @@ const Recorder = React.createClass({
     }
 
     mediaRecorder.onstop = (e) => {
+      console.log('media recorder stopped')
+      console.log(recordedChunks.length);
       if(recordedChunks.length > 0) {
         const blob = new Blob(recordedChunks);
         this.blobToBase64(blob);
@@ -58,6 +60,7 @@ const Recorder = React.createClass({
   },
 
   transcribeRecording (base64) {
+    console.log('transcribeRecording')
     this.props.setTranscribingSpeech(true);
 
     var myHeaders = new Headers();

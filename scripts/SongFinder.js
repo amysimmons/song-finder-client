@@ -67,7 +67,8 @@ const SongFinder = React.createClass({
       .then((response) => {
       return response.json()
     }).then((dataAsJson) => {
-      console.log(dataAsJson)
+      const tracks = dataAsJson.message.body.track_list
+      this.setState({matches: tracks})
     }).catch(function(error) {
       console.log('error', error.message);
     });
@@ -80,6 +81,8 @@ const SongFinder = React.createClass({
     let transcriptionCorrect = this.state.transcriptionCorrect;
     let findingSongs = this.state.findingSongs;
     let matches = this.state.matches;
+
+    this.findSongs();
 
     if (transcribingSpeech || findingSongs) {
       return (
