@@ -1,4 +1,5 @@
 const React = require('react');
+const FontAwesome = require('react-fontawesome');
 
 const Recorder = React.createClass({
 
@@ -89,9 +90,19 @@ const Recorder = React.createClass({
   },
 
   render(){
+    const icon = this.props.recording ? 'stop-circle-o' : 'microphone';
+
     return(
       <div>
-        <div onClick={this.handleClick}>Record</div>
+        <div onClick={this.handleClick}>
+
+        <FontAwesome
+                className='super-crazy-colors'
+                name={icon}
+                size='2x'
+                style={{ textShadow: '0 1px 0 rgba(0, 0, 0, 0.1)' }}
+              />
+        </div>
       </div>
     );
   }

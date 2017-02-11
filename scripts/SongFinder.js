@@ -12,15 +12,13 @@ const SongFinder = React.createClass({
     let transcription = null;
     let transcriptionCorrect = null;
     let findingSongs = false;
-    let matches = [];
 
     return{
       recording: recording,
       transcription: transcription,
       transcribingSpeech: transcribingSpeech,
       findingSongs: findingSongs,
-      transcriptionCorrect: transcriptionCorrect,
-      matches: matches
+      transcriptionCorrect: transcriptionCorrect
     };
   },
 
@@ -41,7 +39,7 @@ const SongFinder = React.createClass({
       this.setState({transcriptionCorrect:true});
       this.findSongs();
     } else {
-      this.setState({transcriptionCorrect:false});
+      this.setState({transcription: null})
     }
   },
 
@@ -60,17 +58,15 @@ const SongFinder = React.createClass({
     var myInit = {
       method: 'POST',
       headers: myHeaders,
-      body: JSON.stringify({"transcription":"plant a seed plant a flower plant a rose"})
+      body: JSON.stringify({"transcription":this.state.transcription})
     };
 
     fetch("http://localhost:3000/findsongs", myInit)
       .then((response) => {
       return response.json()
     }).then((dataAsJson) => {
-      console.log(dataAsJson);
-
-      // const tracks = dataAsJson.message.body.track_list
-      // this.setState({matches: tracks})
+      const songMatchYouTubeId = dataAsJson.bestMatchVideo;
+      this.setState({songMatchYouTubeId: songMatchYouTubeId})
     }).catch(function(error) {
       console.log('error', error.message);
     });
@@ -82,9 +78,7 @@ const SongFinder = React.createClass({
     let transcription = this.state.transcription;
     let transcriptionCorrect = this.state.transcriptionCorrect;
     let findingSongs = this.state.findingSongs;
-    let matches = this.state.matches;
-
-    this.findSongs();
+    let songMatchYouTubeId = this.state.songMatchYouTubeId;
 
     if (transcribingSpeech || findingSongs) {
       return (
@@ -92,55 +86,32 @@ const SongFinder = React.createClass({
           transcribingSpeech={transcribingSpeech}
           findingSongs={findingSongs}/>
       )
-    }
-
-    if (transcription === null || transcriptionCorrect === false){
-      // this.getInitialState()
-      // reset the state here
-
-     return(
+    }else if(transcription === null || transcriptionCorrect === false){
+      return(
        <Recorder
          recording={recording}
          setRecording={this.setRecording}
          setTranscribingSpeech={this.setTranscribingSpeech}
          setTranscription={this.setTranscription}/>
-     );
-    }
-
-    if (transcription !== null && transcriptionCorrect === null) {
+      );
+    }else if (transcription !== null && transcriptionCorrect === null) {
       return (
         <Confirmation
           transcription={transcription}
           transcriptionCorrect={transcriptionCorrect}
           setTranscriptionCorrect={this.setTranscriptionCorrect}/>
       );
-    }
-
-    if (matches.length > 0) {
+    }else if (songMatchYouTubeId) {
       return (
-        <Song/>
+        <Song
+          id={songMatchYouTubeId}/>
+      )
+    }else {
+      return (
+        <div>say what?!</div>
       )
     }
 
-
-  /*
-  if transcription is null show recorder
-  if transcribingSpeech show loader
-  if transcription incorrect show recorder
-  if findingSongs show loader
-  if matches.length > 0 show song /  results
-  */
-
-    // return(
-    //   <div>
-    //     <Recorder
-    //       recording={recording}
-    //       setRecording={this.setRecording}
-    //       setTranscription={this.setTranscription}/>
-    //     <Confirmation
-    //       transcription={transcription}/>
-    //   </div>
-    // );
   }
 });
 
