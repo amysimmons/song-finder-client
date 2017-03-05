@@ -28,6 +28,14 @@ const Recorder = React.createClass({
       console.log(recordedChunks.length);
       if(recordedChunks.length > 0) {
         const blob = new Blob(recordedChunks);
+
+        //validating the recording
+        var audio = document.createElement('audio');
+        audio.setAttribute('controls', '');
+        var audioURL = URL.createObjectURL(blob);
+        audio.src = audioURL;
+        document.querySelector('body').append(audio);
+
         this.blobToBase64(blob);
       }
     }
@@ -36,10 +44,13 @@ const Recorder = React.createClass({
   },
 
   blobToBase64 (blob) {
+    console.log('blob', blob)
     const reader = new window.FileReader();
     reader.readAsDataURL(blob);
     reader.onloadend = () => {
-    const base64 = reader.result.split('data:;base64,')[1]
+      console.log('reader result', reader.result)
+      const base64 = reader.result.split('data:;base64,')[1]
+      console.log('base64', base64)
       this.transcribeRecording(base64);
     }
   },
@@ -103,6 +114,9 @@ const Recorder = React.createClass({
                 style={{ textShadow: '0 1px 0 rgba(0, 0, 0, 0.1)' }}
               />
         </div>
+
+        <div className="audio"></div>
+
       </div>
     );
   }
