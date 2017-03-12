@@ -18,11 +18,11 @@ const Confirm = React.createClass({
   },
 
   render(){
-    let transcription = this.props.transcription.transcription;
+    let transcription = this.props.transcription;
 
     return(
       <div>
-      <span>Did you say{transcription}?</span>
+      <span>Did you say {transcription}?</span>
       <button onClick={() => this.handleClick("yes")}>Yes</button>
       <button onClick={() => this.handleClick("no")}>No</button>
       </div>

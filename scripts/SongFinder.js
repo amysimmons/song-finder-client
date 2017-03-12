@@ -38,6 +38,7 @@ const SongFinder = React.createClass({
     if(transcriptionCorrect){
       this.setState({transcriptionCorrect:true});
       this.findSongs();
+      this.setState({findingSongs: true});
     } else {
       this.setState({transcription: null})
     }
@@ -67,6 +68,7 @@ const SongFinder = React.createClass({
     }).then((dataAsJson) => {
       const songMatchYouTubeId = dataAsJson.bestMatchVideo;
       this.setState({songMatchYouTubeId: songMatchYouTubeId})
+      this.setState({findingSongs: false});
     }).catch(function(error) {
       console.log('error', error.message);
     });
